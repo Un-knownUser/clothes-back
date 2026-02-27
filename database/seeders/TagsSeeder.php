@@ -24,7 +24,9 @@ class TagsSeeder extends Seeder
             ['white', 'Белый', 'color', false],
             ['blue', 'Синий', 'color', false],
             ['summer', 'Лето', 'season', false],
+            ['autumn', 'Осень', 'season', false],
             ['winter', 'Зима', 'season', false],
+            ['spring', 'Весна', 'season', false],
             ['casual', 'Кэжуал', 'style', false],
             ['office', 'Офис', 'style', false],
         ];

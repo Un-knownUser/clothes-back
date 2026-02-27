@@ -25,7 +25,7 @@ class OutfitController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string|max:1000',
+            'deg' => 'required|integer|max:50|min:-50',
             'clothing_ids' => 'required|array|min:1|max:20',
             'clothing_ids.*' => 'required|exists:clothing,id'
         ]);
@@ -44,7 +44,8 @@ class OutfitController extends Controller
         $outfit = Outfit::create([
             'user_id' => Auth::id(),
             'name' => $validated['name'],
-            'clothes_count' => count($validated['clothing_ids']), // ← Добавьте это
+            'deg' => $validated['deg'],
+            'clothes_count' => count($validated['clothing_ids']),
         ]);
 
         $outfit->clothing()->attach($validated['clothing_ids']);

@@ -48,3 +48,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/outfits/{id}', [OutfitController::class, 'destroy']);
     Route::get('/outfits/clothing-categories', [OutfitController::class, 'getClothingByCategories']);
 });
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/outfits/weather', [UserController::class, 'weatherOutfits']);
+});

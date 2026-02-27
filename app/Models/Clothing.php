@@ -26,4 +26,9 @@ class Clothing extends Model
     {
         return $this->with(['mainTag', 'tags' => fn($q) => $q->where('group', '!=', 'main')]);
     }
+    public function outfits()
+    {
+        return $this->belongsToMany(Outfit::class, 'outfit_clothing', 'clothing_id', 'outfit_id')
+            ->using(Outfit::class);
+    }
 }
