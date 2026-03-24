@@ -51,4 +51,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Outfit::class);
     }
+
+    public function likedOutfits()
+    {
+        return $this->morphedByMany(Outfit::class, 'likeable')
+            ->whereHas('outfit', function ($query) {
+                $query->where('is_public', true);
+            });
+    }
 }

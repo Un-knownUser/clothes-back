@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Clothing;
+use App\Models\Outfit;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -71,5 +72,25 @@ class ClothingController extends Controller
             ->with(['mainTag', 'tags' => fn($q) => $q->group('color')])
             ->orderBy('created_at', 'desc')
             ->get();
+    }
+
+    public function outfitsUsingClothing(Clothing $clothing)
+    {
+        $outfits = Outfit::whereHas('clothing', function ($query) use ($clothing) {
+            $query->where('clothing.id', $clothing->id);
+        })
+            ->with(['clothing' => function ($query) {
+                $query->select('clothing.id', 'clothing.name', 'clothing.image_path');
+            }])
+            ->select('outfits.id', 'outfits.name', 'outfits.deg')
+            ->get();
+
+        return response()->json($outfits);
+    }
+
+    public function destroy(Clothing $clothing)
+    {
+        $clothing->delete();
+        return response()->json(['message' => 'Одежда удалена']);
     }
 }

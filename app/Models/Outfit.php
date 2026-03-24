@@ -9,7 +9,7 @@ class Outfit extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'name', 'deg', 'clothes_count'];
+    protected $fillable = ['user_id', 'name', 'deg', 'clothes_count', 'is_public'];
 
     public function user()
     {
@@ -19,5 +19,15 @@ class Outfit extends Model
     public function clothing()
     {
         return $this->belongsToMany(Clothing::class, 'outfit_clothing')->withTimestamps();
+    }
+
+    public function likes()
+    {
+        return $this->morphMany(Like::class, 'likeable');
+    }
+
+    public function likedBy(User $user)
+    {
+        return $this->likes->where('user_id', $user->id)->isNotEmpty();
     }
 }

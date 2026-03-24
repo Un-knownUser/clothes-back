@@ -11,14 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('outfits', function (Blueprint $table) {
+        Schema::create('likes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->string('name');
-            $table->integer('deg');
-            $table->unsignedInteger('clothes_count');
-            $table->boolean('is_public')->default(false);
+            $table->unsignedBigInteger('likeable_id');
+            $table->string('likeable_type');
             $table->timestamps();
+
+            $table->unique(['user_id', 'likeable_id', 'likeable_type']);
+            $table->index(['likeable_type', 'likeable_id']);
+        });
+
+        Schema::table('likes', function (Blueprint $table) {
+            $table->index(['user_id']);
         });
     }
 
@@ -27,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('outfits');
+        Schema::dropIfExists('likes');
     }
 };

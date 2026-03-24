@@ -35,11 +35,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/clothes', [ClothingController::class, 'index']);
     Route::post('/clothes', [ClothingController::class, 'store']);
     Route::get('/clothes/recent', [ClothingController::class, 'lastAdded']);
+    Route::get('/clothes/{clothing}/outfits', [ClothingController::class, 'outfitsUsingClothing']);
+    Route::delete('/clothes/{clothing}', [ClothingController::class, 'destroy']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [UserController::class, 'profile']);
-    Route::get('/stats', [UserController::class, 'index']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -51,4 +52,14 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/outfits/weather', [UserController::class, 'weatherOutfits']);
+});
+
+// Публичные образы
+Route::get('/public-outfits', [OutfitController::class, 'publicIndex']);
+
+// Лайки (middleware auth)
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/outfits/{outfit}/like', [OutfitController::class, 'like']);
+    Route::delete('/outfits/{outfit}/like', [OutfitController::class, 'unlike']);
+    Route::get('/user-liked-outfits', [OutfitController::class, 'userLikedOutfits']);
 });
