@@ -30,4 +30,9 @@ class Outfit extends Model
     {
         return $this->likes->where('user_id', $user->id)->isNotEmpty();
     }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class)->latest();
+    }
 }

@@ -16,19 +16,44 @@ class TagsSeeder extends Seeder
     {
         $tagsData = [
             // ['key', 'label', 'group', 'is_required']
+            // --- Группа: Main (Тип изделия) ---
             ['tops', 'Верх', 'main', true],
             ['bottoms', 'Низ', 'main', true],
             ['shoes', 'Обувь', 'main', true],
             ['accessories', 'Аксессуары', 'main', true],
-            ['black', 'Чёрный', 'color', false],
-            ['white', 'Белый', 'color', false],
-            ['blue', 'Синий', 'color', false],
+            ['outerwear', 'Верхняя одежда', 'main', false],
+            ['headwear', 'Головные уборы', 'main', false],
+
+            // --- Группа: Season (Сезоны) ---
             ['summer', 'Лето', 'season', false],
             ['autumn', 'Осень', 'season', false],
             ['winter', 'Зима', 'season', false],
             ['spring', 'Весна', 'season', false],
+            ['demiseason', 'Демисезон', 'season', false],
+
+            // --- Группа: Color (Цвета) ---
+            ['black', 'Чёрный', 'color', false],
+            ['white', 'Белый', 'color', false],
+            ['blue', 'Синий', 'color', false],
+            ['grey', 'Серый', 'color', false],
+            ['beige', 'Бежевый', 'color', false],
+            ['brown', 'Коричневый', 'color', false],
+            ['green', 'Зелёный', 'color', false],
+            ['red', 'Красный', 'color', false],
+
+            // --- Группа: Style (Стили) ---
             ['casual', 'Кэжуал', 'style', false],
             ['office', 'Офис', 'style', false],
+            ['sport', 'Спорт', 'style', false],
+            ['classic', 'Классика', 'style', false],
+            ['streetwear', 'Уличный стиль', 'style', false],
+
+            // --- Группа: Occasion (Повод) ---
+            ['work', 'Работа', 'occasion', false],
+            ['date', 'Свидание', 'occasion', false],
+            ['party', 'Вечеринка', 'occasion', false],
+            ['travel', 'Путешествие', 'occasion', false],
+            ['gym', 'Спортзал', 'occasion', false],
         ];
 
         $insertData = collect($tagsData)->map(function ($tag) {

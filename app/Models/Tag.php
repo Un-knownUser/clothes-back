@@ -11,6 +11,10 @@ class Tag extends Model
 
     protected $fillable = ['key', 'label', 'group', 'is_required'];
 
+    protected $casts = [
+        'is_required' => 'boolean',
+    ];
+
     public function clothings()
     {
         return $this->belongsToMany(Clothing::class, 'clothes_tags');

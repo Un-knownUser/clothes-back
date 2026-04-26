@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class OtpCode extends Model
+{
+    use HasFactory;
+
+    protected $fillable = ['user_id', 'code', 'expires_at'];
+
+    protected $casts = [
+        'expires_at' => 'datetime',
+    ];
+
+    // Очистка просроченных кодов
+    public static function clearExpiredCodes()
+    {
+        self::where('expires_at', '<', now())->delete();
+    }
+}

@@ -135,4 +135,22 @@ class OutfitController extends Controller
 
         return response()->json($likedOutfitIds);
     }
+
+    public function getComments(Outfit $outfit)
+    {
+        $comments = $outfit->comments()->with('user:id,name')->get();
+        return response()->json($comments);
+    }
+
+    public function storeComment(Request $request, Outfit $outfit)
+    {
+        $request->validate(['content' => 'required|string|max:500']);
+
+        $comment = $outfit->comments()->create([
+            'user_id' => $request->user()->id,
+            'content' => $request->content
+        ]);
+
+        return response()->json($comment->load('user:id,name'));
+    }
 }
