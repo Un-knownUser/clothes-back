@@ -22,6 +22,21 @@ class OutfitController extends Controller
         return response()->json($outfits);
     }
 
+    public function getLikesItems(Request $request)
+    {
+        $userId = auth()->id();
+
+        $likedOutfits = Outfit::withCount('likes') // Подсчет общего количества лайков для каждого образа
+        ->with('user:id,name', 'clothing:id,name,image_path') // Загрузка связанных данных
+        ->whereHas('likes', function ($query) use ($userId) {
+            $query->where('user_id', $userId); // Фильтрация лайков по текущему пользователю
+        })
+            ->orderBy('likes_count', 'desc') // Сортировка по количеству лайков
+            ->paginate(12); // Пагинация
+
+        return response()->json($likedOutfits);
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([

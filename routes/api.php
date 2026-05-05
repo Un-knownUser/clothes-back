@@ -61,8 +61,9 @@ Route::middleware('auth:sanctum')->group(function () {
 // Публичные образы
 Route::get('/public-outfits', [OutfitController::class, 'publicIndex']);
 
-// Лайки (middleware auth)
+// Лайки
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/likes', [OutfitController::class, 'getLikesItems']);
     Route::post('/outfits/{outfit}/like', [OutfitController::class, 'like']);
     Route::delete('/outfits/{outfit}/like', [OutfitController::class, 'unlike']);
     Route::get('/user-liked-outfits', [OutfitController::class, 'userLikedOutfits']);
