@@ -8,6 +8,8 @@ use App\Models\OtpCode;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class LoginController extends Controller
@@ -26,20 +28,27 @@ class LoginController extends Controller
             'otp_code.size' => 'OTP-код должен состоять ровно из 6 символов.',
         ]);
 
-        if (!Auth::attempt($request->only('email', 'password'))) {
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json(['message' => 'Неверные учетные данные'], 401);
         }
 
-        $user = Auth::user();
-
-        // Генерация и сохранение OTP-кода
         $otpCode = random_int(100000, 999999);
         OtpCode::updateOrCreate(
             ['user_id' => $user->id],
             ['code' => $otpCode, 'expires_at' => now()->addMinutes(5)]
         );
 
-        Mail::to($user->email)->send(new OtpMail($otpCode));
+        try {
+            Mail::to($user->email)->send(new OtpMail($otpCode));
+        } catch (\Exception $e) {
+            Log::error('Ошибка отправки OTP: ' . $e->getMessage());
+
+            return response()->json([
+                'message' => 'Произошла ошибка при отправке кода на почту. Попробуйте позже.'
+            ], 500);
+        }
 
         return response()->json(['message' => 'OTP-код отправлен на ваш email']);
     }
@@ -75,5 +84,3 @@ class LoginController extends Controller
         return response()->json(['message' => 'Вы вышли из системы']);
     }
 }
-
-// rqefytbzwysbycic

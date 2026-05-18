@@ -22,6 +22,44 @@ class OutfitController extends Controller
         return response()->json($outfits);
     }
 
+    public function update(Request $request, Outfit $outfit)
+    {
+        // Проверка прав пользователя
+        if ($request->user()->id !== $outfit->user_id) {
+            return response()->json(['message' => 'Нет прав'], 403);
+        }
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'deg' => 'required|integer',
+            'clothing_ids' => 'nullable|array', // Разрешаем пустой массив или массив с ID
+            'clothing_ids.*' => 'exists:clothing,id' // Каждая ID должна существовать в таблице clothes
+        ]);
+
+        // Обновляем базовые поля
+        $outfit->update([
+            'name' => $validated['name'],
+            'deg' => $validated['deg'],
+        ]);
+
+        // Синхронизируем вещи (самая важная часть)
+        // Метод sync() творит магию: он сам удалит из базы связи с вещами,
+        // которых нет в массиве, и добавит новые.
+        if (isset($validated['clothing_ids'])) {
+            $outfit->clothing()->sync($validated['clothing_ids']);
+        } else {
+            // Если пришел пустой массив (пользователь удалил всю одежду из образа)
+            $outfit->clothing()->sync([]);
+        }
+
+        return response()->json([
+            'message' => 'Образ обновлен',
+            // Обязательно используем load('clothing'), чтобы Laravel вернул образ
+            // вместе с обновленным списком одежды для фронтенда
+            'outfit' => $outfit->load('clothing')
+        ]);
+    }
+
     public function getLikesItems(Request $request)
     {
         $userId = auth()->id();

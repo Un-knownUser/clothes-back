@@ -45,6 +45,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [UserController::class, 'profile']);
+    Route::post('/user/profile', [UserController::class, 'updateProfile']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -52,6 +53,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/outfits', [OutfitController::class, 'store']);
     Route::delete('/outfits/{id}', [OutfitController::class, 'destroy']);
     Route::get('/outfits/clothing-categories', [OutfitController::class, 'getClothingByCategories']);
+    Route::put('/outfits/{outfit}', [OutfitController::class, 'update']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
