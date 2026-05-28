@@ -9,7 +9,16 @@ class Outfit extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'name', 'deg', 'clothes_count', 'is_public'];
+    protected $fillable = [
+        'user_id',
+        'name',
+        'deg',
+        'clothes_count',
+        'is_public',
+        'likeable_type',
+        'likeable_id',
+        'content'
+    ];
 
     public function user()
     {

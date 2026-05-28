@@ -75,7 +75,7 @@ Route::get('/outfits/{outfit}/comments', [OutfitController::class, 'getComments'
 Route::middleware('auth:sanctum')->post('/outfits/{outfit}/comments', [OutfitController::class, 'storeComment']);
 
 
-Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
+Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function () {
     Route::get('tags', [TagsController::class, 'index']);
     Route::post('/tags', [TagsController::class, 'store']);
     Route::put('/tags/{tag}', [TagsController::class, 'update']);

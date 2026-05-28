@@ -17,7 +17,7 @@ class OutfitController extends Controller
         $outfits = Outfit::with(['clothing.mainTag', 'clothing.tags'])
             ->where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(12);
 
         return response()->json($outfits);
     }
@@ -33,7 +33,7 @@ class OutfitController extends Controller
             'name' => 'required|string|max:255',
             'deg' => 'required|integer',
             'clothing_ids' => 'nullable|array', // Разрешаем пустой массив или массив с ID
-            'clothing_ids.*' => 'exists:clothing,id' // Каждая ID должна существовать в таблице clothes
+            'clothing_ids.*' => 'exists:clothing,id'
         ]);
 
         // Обновляем базовые поля
@@ -42,9 +42,8 @@ class OutfitController extends Controller
             'deg' => $validated['deg'],
         ]);
 
-        // Синхронизируем вещи (самая важная часть)
-        // Метод sync() творит магию: он сам удалит из базы связи с вещами,
-        // которых нет в массиве, и добавит новые.
+        // Синхронизируем вещи
+        // Метод sync() удалит из базы связи с вещами, которых нет в массиве, и добавит новые.
         if (isset($validated['clothing_ids'])) {
             $outfit->clothing()->sync($validated['clothing_ids']);
         } else {
@@ -54,8 +53,6 @@ class OutfitController extends Controller
 
         return response()->json([
             'message' => 'Образ обновлен',
-            // Обязательно используем load('clothing'), чтобы Laravel вернул образ
-            // вместе с обновленным списком одежды для фронтенда
             'outfit' => $outfit->load('clothing')
         ]);
     }
